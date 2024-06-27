@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FaBarsStaggered, FaXmark } from "react-icons/fa6";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { loginWithRedirect, isAuthenticated, logout, user } = useAuth0();
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -39,7 +41,34 @@ const Navbar = () => {
         </ul>
 
         {/* Sign Up & LogIn Btn */}
-        <div className="text-base text-primary font-medium space-x-5 hidden lg:block">
+        {/* <ul className="">{isAuthenticated && <p> {user.name} </p>}</ul> */}
+        <div className="text-base text-primary font-medium hidden lg:block">
+          {isAuthenticated ? (
+            // <NavLink className="py-2 px-5 border rounded bg-blue text-white">
+            <button
+              className="py-2 px-5 border rounded bg-blue text-white"
+              onClick={() =>
+                logout({ logoutParams: { returnTo: window.location.origin } })
+              }
+            >
+              Log Out
+            </button>
+          ) : (
+            // </NavLink>
+            // <NavLink className="py-2 px-5 border rounded">
+            <button
+              className="py-2 px-5 border rounded text-blue bg-white"
+              onClick={() => loginWithRedirect()}
+            >
+              Log In
+            </button>
+            // </NavLink>
+          )}
+        </div>
+        <ul className="flex items-center justify-center">
+          {isAuthenticated && <p>{user.name}</p>}
+        </ul>
+        {/* <div className="text-base text-primary font-medium space-x-5 hidden lg:block">
           <NavLink to="/login" className="py-2 px-5 border rounded">
             Log In
           </NavLink>
@@ -49,7 +78,7 @@ const Navbar = () => {
           >
             Sign Up
           </NavLink>
-        </div>
+        </div> */}
 
         {/* mobile menu */}
         <div className="md:hidden block">
